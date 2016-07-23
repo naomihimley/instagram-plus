@@ -36,38 +36,41 @@ module.exports = function () {
   };
 
 /* GETS */
+  /* returns your news feed. */
   this.getMyNews = function(callback) {
     get('/news/inbox/?', callback);
   };
-/* returns your news feed. 
-  response: status, oldStories, and newStories. nested objects like:
-  {
-      "pk": "K/PLaa/w8T4W6Wv/AKZfJrUI6lA=",
-      "counts": {},
-      "args": {
-        "media": [
-          {
-            "original_width": 1080,
-            "image": "https://scontent-lga3-1.cdninstagram.com/t51.2885-15/s150x150/e35/13741009_1732660540323657_1687222740_n.jpg?ig_cache_key=MTI5ODk0OTg4OTE1MzkyMjg4Mg%3D%3D.2",
-            "id": "1298949889153922882_342562186",
-            "original_height": 1080
-          }
-        ],
-        "links": [
-          {
-            "start": 0,
-            "end": 9,
-            "id": "14053214",
-            "type": "user"
-          }
-        ],
-        "text": "mikexfinn liked your photo.",
-        "profile_id": 14053214,
-        "profile_image": "http://scontent-lga3-1.cdninstagram.com/t51.2885-19/11850272_384406841764431_1047596056_a.jpg",
-        "timestamp": 1469067739.569135
-      },
-      "type": 1
-    }
-*/
-
+  /* news about your friends activity */
+  this.followingNews = function (callback) {
+    get('/news/', callback);
+  };
+  /* get a list of all of a user's followers */
+  this.followers = function (user, callback) {
+    var url = '/friendships/'+ user +'/followers/';
+    get(url, callback);
+  };
+  /* get a list of all of a user's followings */
+  this.following = function (user, callback) {
+    var url = '/friendships/'+ user +'/following/';
+    get(url, callback);
+  };
+  /* shows your relationship to a given user */
+  this.relationship = function (user, callback) {
+    var url = '/friendships/show/'+ user +'/';
+    get(url, callback);
+  };
+  /* fetches info about a given user */
+  this.userInfo = function (user, callback) {
+    var url = '/users/'+ user +'/info';
+    get(url, callback);
+  };
+  /* the standard discover page. reccommended photos */
+  this.discover = function (callback) {
+    get('/discover/explore/?max_id=5&', callback);
+  };
+/* smart recommendations based on users networks */
+  this.discoverChaining = function (user, callback) {
+    var url = '/discover/chaining/?target_id=' + user;
+    get(url, callback);
+  };
 };
