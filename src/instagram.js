@@ -6,6 +6,7 @@ module.exports = function () {
   var self = this;
 
   var buildOptions = function (path, method) {
+    if (hasCredentials()){
       var options = {
         method: method,
         url: 'https://i.instagram.com/api/v1' + path,
@@ -20,6 +21,13 @@ module.exports = function () {
         }
       };
       return options;
+    } else {
+       throw new Error('You must provide credentials');
+    }
+  };
+
+  var hasCredentials = function () {
+    return self.cookie != null;
   };
 
   this.config = function (settings) {
@@ -71,6 +79,34 @@ module.exports = function () {
 /* smart recommendations based on users networks */
   this.discoverChaining = function (user, callback) {
     var url = '/discover/chaining/?target_id=' + user;
+    get(url, callback);
+  };
+/* a given user's photostream */
+  this.userFeed = function (user, callback) {
+    var url = '/feed/user/'+ user +'/';
+    get(url, callback);
+  };
+/* your feed */
+  this.timeline = function (callback) {
+    get('/feed/timeline/', callback);
+  };
+/* returns all photos you've liked */
+  this.myLikes = function (callback) {
+    get('/feed/liked/', callback);
+  };
+/* returns information about a private message */
+  this.directMessages = function (thread, callback) {
+    var url = '/direct_v2/threads/'+ thread +'/';
+    get(url, callback);
+  };
+/* returns the coordinates for all of a given user's photos */
+  this.photoMap = function (user, callback) {
+    var url = '/maps/user/'+ user +'/';
+    get(url, callback);
+  };
+/* all tagged photos of a given user */
+  this.taggedPhotos = function (user, callback) {
+    var url = '/usertags/'+ user +'/feed/';
     get(url, callback);
   };
 };
