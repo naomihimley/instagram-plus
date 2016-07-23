@@ -1,0 +1,1 @@
+A small library that digs into some of the more interesting features of instagram's private API.
