@@ -22,7 +22,7 @@ module.exports = function () {
       };
       return options;
     } else {
-       throw new Error('You must provide credentials');
+       throw new Error('Missing session ID');
     }
   };
 
@@ -35,15 +35,27 @@ module.exports = function () {
     self.user_agent = settings.user_agent;
   };
 
+  var _request = function (options, callback) {
+    request(options, function (error, response, body) {
+      if (!error && response.statusCode == 200){
+        callback(null, JSON.parse(body))
+      } else {
+        callback(error, {statusCode: response.statusCode})
+      }
+    })
+  }
+  
   var get = function (path, callback) {
     var options = buildOptions(path, 'GET');
-    request(options, function (error, response, body) {
-      var obj = JSON.parse(body);
-      callback(error, obj);
-    });
+    _request(options, callback);
   };
 
-/* GETS */
+  var post = function (path, payload, callback) {
+    var options = buildOptions(path, 'POST');
+    options.body = payload;
+    _request(options, callbck);
+  };
+
   /* returns your news feed. */
   this.getMyNews = function(callback) {
     get('/news/inbox/?', callback);
