@@ -76,13 +76,13 @@ module.exports = function () {
   };
 
   /* get a list of all of a user's followers */
-  this.followers = function (user, callback) {
+  this.getFollowers = function (user, callback) {
     var path = '/friendships/'+ user +'/followers/';
     get(path, callback);
   };
 
   /* get a list of all of a user's followings */
-  this.following = function (user, callback) {
+  this.getFollowings = function (user, callback) {
     var path = '/friendships/'+ user +'/following/';
     get(path, callback);
   };
