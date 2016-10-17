@@ -32,11 +32,7 @@ module.exports = function () {
 
   var _request = function (options, callback) {
     request(options, function (error, response, body) {
-      if (!error && response.statusCode == 200){
-        callback(null, JSON.parse(body))
-      } else {
-        callback(error, {statusCode: response.statusCode, body: body})
-      }
+      callback(error, response, JSON.parse(body));
     })
   }
 
@@ -51,10 +47,19 @@ module.exports = function () {
     _request(options, callback);
   };
 
+  var convertUsernameToId = function (username, callback) {
+    self.searchByUsername(username, function (error, response, body) {
+      if (body.users && body.users[0]){
+        callback(error, body.users[0].user.pk)
+      }
+    })
+  };
+
   this.config = function (settings) {
     self.cookie = settings.cookie;
     self.user_agent = settings.user_agent;
   };
+
   /* search for a user by username */
   this.searchByUsername = function  (query, callback) {
     get('/fbsearch/topsearch/?query=' + query, callback)
@@ -64,74 +69,101 @@ module.exports = function () {
   this.getMyNews = function(callback) {
     get('/news/inbox/?', callback);
   };
+
   /* news about your friends activity */
   this.followingNews = function (callback) {
     get('/news/', callback);
   };
+
   /* get a list of all of a user's followers */
   this.followers = function (user, callback) {
     var path = '/friendships/'+ user +'/followers/';
     get(path, callback);
   };
+
   /* get a list of all of a user's followings */
   this.following = function (user, callback) {
     var path = '/friendships/'+ user +'/following/';
     get(path, callback);
   };
+
   /* shows your relationship to a given user */
   this.relationship = function (user, callback) {
-    var path = '/friendships/show/'+ user +'/';
+    var path = '/friendships/show/'+ user;
     get(path, callback);
   };
+
   /* fetches info about a given user */
   this.userInfo = function (user, callback) {
     var path = '/users/'+ user +'/info';
     get(path, callback);
   };
+
   /* the standard discover page. reccommended photos */
   this.discover = function (callback) {
     get('/discover/explore/?max_id=5&', callback);
   };
+
 /* smart recommendations based on users networks */
   this.discoverChaining = function (user, callback) {
     var path = '/discover/chaining/?target_id=' + user;
     get(path, callback);
   };
+
 /* a given user's photostream */
   this.userFeed = function (user, callback) {
-    var path = '/feed/user/'+ user +'/';
+    var path = '/feed/user/'+ user;
     get(path, callback);
   };
+
 /* your feed */
   this.timeline = function (callback) {
     get('/feed/timeline/', callback);
   };
+
 /* returns all photos you've liked */
   this.myLikes = function (callback) {
     get('/feed/liked/', callback);
   };
+
 /* returns all users who have viewed a given peice of media */
   this.viewers = function (id, callback) {
     get('/media/'+ id +'/list_reel_media_viewer/', callback);
   }
-/* returns information about a private message */
-  this.directMessages = function (thread, callback) {
-    var path = '/direct_v2/threads/'+ thread +'/';
+
+  //https://i.instagram.com/api/v1/direct_v2/inbox/
+  this.directMessages = function (callback) {
+    var path = '/direct_v2/inbox/';
     get(path, callback);
   };
+
+/* returns information about a private message */
+  this.messageThread = function (thread, callback) {
+    var path = '/direct_v2/threads/'+ thread;
+    get(path, callback);
+  };
+
 /* returns the coordinates for all of a given user's photos */
   this.photoMap = function (user, callback) {
-    var path = '/maps/user/'+ user +'/';
+    var path = '/maps/user/'+ user;
     get(path, callback);
   };
+
 /* all tagged photos of a given user */
   this.taggedPhotos = function (user, callback) {
     var path = '/usertags/'+ user +'/feed/';
     get(path, callback);
   };
-/* search a user's followings*/
+
+/* search a user's followings */
   this.searchFollowings = function (user, query, callback) {
-    var path = '/friendships/'+user+'/following/?query='+query;
+    var path = '/friendships/' + user + '/following/?query=' + query;
     get(path, callback);
   }
+/* search a user's followers */
+  this.searchFollowers = function (user, query, callback) {
+    var path = '/friendships/' + user + '/followers/?query=' + query;
+    get(path, callback);
+  }
+
 };
