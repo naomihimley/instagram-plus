@@ -144,7 +144,7 @@ module.exports = function () {
   };
 
 /* returns the coordinates for all of a given user's photos */
-  this.photoMap = function (user, callback) {
+  this.geoData = function (user, callback) {
     var path = '/maps/user/'+ user;
     get(path, callback);
   };

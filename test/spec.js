@@ -100,4 +100,63 @@ describe('instagram', function() {
       done();
     })
   });
+
+
+  it('timeline returns your own photostream', function(done) {
+    this.timeout(6000);
+    client.timeline(function (error, response, body) {
+      expect(response.statusCode).to.equal(200);
+      expect(body).to.have.property('items');
+      done();
+    })
+  });
+
+  it('myLikes returns all photos you\'ve liked', function(done) {
+    this.timeout(6000);
+    client.myLikes(function (error, response, body) {
+      expect(response.statusCode).to.equal(200);
+      expect(body).to.have.property('items');
+      done();
+    })
+  });
+
+  it('directMessages returns your direct message history', function(done) {
+    this.timeout(6000);
+    client.directMessages(function (error, response, body) {
+      expect(body).to.have.property('inbox');
+      done();
+    })
+  });
+
+  it('geoData retuns geo data for all of a given user\'s media', function(done) {
+    this.timeout(6000);
+    client.geoData(config.users.one.id, function (error, response, body) {
+      expect(body).to.have.property('geo_media');
+      done();
+    })
+  });
+
+  it('taggedPhotos returns all photos a given user is tagged in', function(done) {
+    this.timeout(6000);
+    client.taggedPhotos(config.users.one.id, function (error, response, body) {
+      expect(body).to.have.property('items');
+      done();
+    })
+  });
+
+  it('searchFollowings returns all of a target user\'s followings that match a given query', function(done) {
+    this.timeout(6000);
+    client.searchFollowings(config.users.one.id, config.users.four.name, function (error, response, body) {
+      expect(body).to.have.property('users');
+      done();
+    })
+  });
+
+  it('searchFollowers returns all of a target user\'s followers that match a given query', function(done) {
+    this.timeout(6000);
+    client.searchFollowers(config.users.one.id, config.users.four.name, function (error, response, body) {
+      expect(body).to.have.property('users');
+      done();
+    })
+  });
 });
