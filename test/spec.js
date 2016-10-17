@@ -83,9 +83,9 @@ describe('instagram', function() {
     })
   });
 
-  it('discoverChaining returns users similar to / associated with a given user', function(done) {
+  it('relatedUsers returns users similar to / associated with a given user', function(done) {
     this.timeout(6000);
-    client.discoverChaining(config.users.one.id, function (error, response, body) {
+    client.relatedUsers(config.users.one.id, function (error, response, body) {
       expect(response.statusCode).to.equal(200);
       expect(body).to.have.property('users');
       done();

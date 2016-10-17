@@ -105,7 +105,7 @@ module.exports = function () {
   };
 
 /* smart recommendations based on users networks */
-  this.discoverChaining = function (user, callback) {
+  this.relatedUsers = function (user, callback) {
     var path = '/discover/chaining/?target_id=' + user;
     get(path, callback);
   };
