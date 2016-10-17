@@ -55,4 +55,49 @@ describe('instagram', function() {
     })
   });
 
+
+  it('relationship returns your relationship to a given user', function(done) {
+    this.timeout(6000);
+    client.relationship(config.users.one.id, function (error, response, body) {
+      expect(response.statusCode).to.equal(200);
+      expect(body).to.have.property('followed_by');
+      done();
+    })
+  });
+
+  it('userInfo returns basic profile information for a given user', function(done) {
+    this.timeout(6000);
+    client.userInfo(config.users.one.id, function (error, response, body) {
+      expect(response.statusCode).to.equal(200);
+      expect(body).to.have.property('user');
+      done();
+    })
+  });
+
+  it('discover returns media suggested by instagram', function(done) {
+    this.timeout(6000);
+    client.discover(function (error, response, body) {
+      expect(response.statusCode).to.equal(200);
+      expect(body).to.have.property('items');
+      done();
+    })
+  });
+
+  it('discoverChaining returns users similar to / associated with a given user', function(done) {
+    this.timeout(6000);
+    client.discoverChaining(config.users.one.id, function (error, response, body) {
+      expect(response.statusCode).to.equal(200);
+      expect(body).to.have.property('users');
+      done();
+    })
+  });
+
+  it('photoStream returns a given user\'s media', function(done) {
+    this.timeout(6000);
+    client.photoStream(config.users.one.id, function (error, response, body) {
+      expect(response.statusCode).to.equal(200);
+      expect(body).to.have.property('items');
+      done();
+    })
+  });
 });

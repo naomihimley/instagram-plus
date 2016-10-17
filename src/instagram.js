@@ -111,7 +111,7 @@ module.exports = function () {
   };
 
 /* a given user's photostream */
-  this.userFeed = function (user, callback) {
+  this.photoStream = function (user, callback) {
     var path = '/feed/user/'+ user;
     get(path, callback);
   };
