@@ -17,8 +17,9 @@ module.exports = function () {
           'user-agent': self.user_agent || 'Instagram 8.0.0 (iPhone8,1; iPhone OS 9_3; en_US; en-US; scale=2.00; 750x1334) AppleWebKit/420+',
           'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
           'accept-language': 'en-US;q=1',
-          'x-ig-connection-type': 'WiFi'
-        }
+          'x-ig-connection-type': 'WiFi',
+        },
+        json: true
       };
       return options;
     } else {
@@ -32,11 +33,12 @@ module.exports = function () {
 
   var _request = function (options, callback) {
     request(options, function (error, response, body) {
-      callback(error, response, JSON.parse(body));
+      callback(error, response, body);
     })
   }
 
   var get = function (path, callback) {
+    console.log('url', path);
     var options = buildOptions(path, 'GET');
     _request(options, callback);
   };
@@ -45,6 +47,11 @@ module.exports = function () {
     var options = buildOptions(path, 'POST');
     options.body = payload;
     _request(options, callback);
+  };
+
+  /* wanted */
+  var buildPath = function (path, args){
+    return path += args.length > 2 ? '?max_id=' + args[1] : '';
   };
 
   var convertUsernameToId = function (username, callback) {
@@ -82,9 +89,9 @@ module.exports = function () {
   };
 
   /* get a list of all of a user's followings */
-  this.getFollowings = function (user, callback) {
-    var path = '/friendships/'+ user +'/following/';
-    get(path, callback);
+  this.getFollowings = function (user, next, callback) {
+    var path = buildPath('/friendships/'+ user +'/following/', arguments);
+    get(path, arguments[arguments.length - 1]);
   };
 
   /* shows your relationship to a given user */
@@ -100,8 +107,9 @@ module.exports = function () {
   };
 
   /* the standard discover page. reccommended photos */
-  this.discover = function (callback) {
-    get('/discover/explore/?max_id=5&', callback);
+  this.discover = function (next, callback) {
+    var path = buildPath('/discover/explore/', arguments);
+    get(path, arguments[arguments.length - 1]);
   };
 
 /* smart recommendations based on users networks */
@@ -129,6 +137,10 @@ module.exports = function () {
 /* returns all users who have viewed a given peice of media */
   this.viewers = function (id, callback) {
     get('/media/'+ id +'/list_reel_media_viewer/', callback);
+  }
+
+  this.stories = function (callback){
+    get('/feed/reels_tray/', callback);
   }
 
   //https://i.instagram.com/api/v1/direct_v2/inbox/

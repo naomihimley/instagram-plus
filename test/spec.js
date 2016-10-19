@@ -159,4 +159,12 @@ describe('instagram', function() {
       done();
     })
   });
+
+  it('stories returns all current user stories', function(done) {
+    this.timeout(6000);
+    client.stories(function (error, response, body) {
+      expect(body).to.have.property('tray');
+      done();
+    })
+  });
 });
