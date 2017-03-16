@@ -38,7 +38,6 @@ module.exports = function () {
   }
 
   var get = function (path, callback) {
-    console.log('url', path);
     var options = buildOptions(path, 'GET');
     _request(options, callback);
   };
@@ -49,7 +48,15 @@ module.exports = function () {
     _request(options, callback);
   };
 
-  /* wanted */
+  /* this is hacky and sorta awful but i wanted to be able to give
+     users the option to pass optional "next" arguments to endpoints
+     that reutrn cursored collections. the callback will always be
+     the last argument, so it's passed to the request function
+     with [arguments.length - 1] - this is for handling the rest.
+     the path is only built with a max_id if its the first request
+     (no cursor)
+  */
+
   var buildPath = function (path, args){
     return path += args.length > 2 ? '?max_id=' + args[1] : '';
   };
